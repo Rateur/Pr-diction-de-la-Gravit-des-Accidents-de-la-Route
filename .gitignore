@@ -16,13 +16,6 @@ venv/
 .vscode/
 .idea/
 
-# Data artifacts (volumineux)
-data/*.csv
-data/*.parquet
-data/*.feather
-data/*.zip
-data/*.xlsx
-
 # Exports generes
 accidents_*.csv
 df_acc_scored.csv
