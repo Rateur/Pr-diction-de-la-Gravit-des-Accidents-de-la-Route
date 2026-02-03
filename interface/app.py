@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 import streamlit as st
@@ -138,7 +139,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-API_URL = st.sidebar.text_input("API URL", "http://localhost:8000")
+DEFAULT_API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = st.sidebar.text_input("API URL", DEFAULT_API_URL)
 
 if st.sidebar.button("Health check"):
     try:

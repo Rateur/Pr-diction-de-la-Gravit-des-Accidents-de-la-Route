@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    image: accident-app
+    container_name: accident-api
+    environment:
+    - ENV=production
+    ports:
+    - "8000:8000"
+    volumes:
+    - ./model:/app/model
+    networks:
+      - accident-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build: .
+    image: accident-app
+    container_name: accident-front
+    ports:
+    - "8501:8501"
+    environment:
+    - API_URL=http://api:8000
+    volumes:
+    - ./interface:/app/interface
+    networks:
+      - accident-network
+    command: streamlit run interface/app.py --server.port 8501 --server.address 0.0.0.0
+    depends_on:
+      api:
+        condition: service_healthy
+
+networks:
+  accident-network:
+    driver: bridge
