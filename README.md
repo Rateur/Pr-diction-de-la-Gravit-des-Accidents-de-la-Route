@@ -120,9 +120,6 @@ accident_dla_route/
 ├── model/
 │   ├── colonnes_modele.joblib
 │   └── modele_gravite_rf.joblib
-├── documentations/
-│   ├── Description des bases de données annuelles.pdf
-│   └── PROJET_ACCIDENTS_ROUTIERS.pdf
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml

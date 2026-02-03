@@ -27,3 +27,6 @@ df_acc_scored.csv
 .pytest_cache/
 .mypy_cache/
 .cache/
+
+# Docs
+*.pdf
