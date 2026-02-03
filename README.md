@@ -28,7 +28,7 @@ Les données utilisées proviennent de la base BAAC (Bulletins d'Analyse des Acc
 
 ### Récupération et emplacement des données
 
-Le dossier `data/` n'est pas versionné. Pour exécuter les notebooks et entraîner le modèle, vous devez télécharger les fichiers depuis la page data.gouv, puis les placer dans `data/` avec les noms attendus :
+Le dossier `data/` n'est pas versionné et n'est pas présent sur GitHub. Vous devez le créer à la racine du projet, puis y placer les fichiers téléchargés depuis data.gouv avec les noms attendus :
 
 - `data/caracteristiques.csv`
 - `data/lieux.csv`
@@ -111,12 +111,6 @@ Astuce : vous pouvez télécharger une année spécifique (ex. 2024) puis renomm
 
 ```text
 accident_dla_route/
-├── data/
-│   ├── caracteristiques.csv   # À télécharger
-│   ├── lieux.csv              # À télécharger
-│   ├── usagers.csv            # À télécharger
-│   ├── accidents_clean.csv    # Généré par notebook
-│   └── accidents_scored.csv   # Généré par notebook
 ├── notebooks/
 │   ├── 01_Exploration_Donnees.ipynb
 │   ├── 02_Nettoyage_Feature_Engineering.ipynb
@@ -131,6 +125,17 @@ accident_dla_route/
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
+```
+
+Dossiers locaux non versionnés (à créer) :
+
+```text
+data/
+├── caracteristiques.csv   # À télécharger
+├── lieux.csv              # À télécharger
+├── usagers.csv            # À télécharger
+├── accidents_clean.csv    # Généré par notebook
+└── accidents_scored.csv   # Généré par notebook
 ```
 
 ---
