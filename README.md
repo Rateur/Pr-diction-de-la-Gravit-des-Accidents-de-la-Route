@@ -26,6 +26,16 @@ Les données utilisées proviennent de la base BAAC (Bulletins d'Analyse des Acc
 
 **[Bases de données annuelles des accidents corporels (2005-2024)](https://www.data.gouv.fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere-annees-de-2005-a-2024)**
 
+### Récupération et emplacement des données
+
+Le dossier `data/` n'est pas versionné. Pour exécuter les notebooks et entraîner le modèle, vous devez télécharger les fichiers depuis la page data.gouv, puis les placer dans `data/` avec les noms attendus :
+
+- `data/caracteristiques.csv`
+- `data/lieux.csv`
+- `data/usagers.csv`
+
+Astuce : vous pouvez télécharger une année spécifique (ex. 2024) puis renommer les fichiers en respectant ces noms.
+
 ---
 
 ## Stack Technique
@@ -102,14 +112,11 @@ Les données utilisées proviennent de la base BAAC (Bulletins d'Analyse des Acc
 ```text
 accident_dla_route/
 ├── data/
-│   ├── accidents_clean.csv
-│   ├── accidents_scored.csv
-│   ├── caract-2024.csv
-│   ├── caracteristiques.csv
-│   ├── lieux-2024.csv
-│   ├── lieux.csv
-│   ├── usagers-2024.csv
-│   └── usagers.csv
+│   ├── caracteristiques.csv   # À télécharger
+│   ├── lieux.csv              # À télécharger
+│   ├── usagers.csv            # À télécharger
+│   ├── accidents_clean.csv    # Généré par notebook
+│   └── accidents_scored.csv   # Généré par notebook
 ├── notebooks/
 │   ├── 01_Exploration_Donnees.ipynb
 │   ├── 02_Nettoyage_Feature_Engineering.ipynb

@@ -16,8 +16,8 @@ venv/
 .vscode/
 .idea/
 
-# Exports generes
-accidents_*.csv
+# Data (non versionnées)
+data/
 df_acc_scored.csv
 
 # Models
