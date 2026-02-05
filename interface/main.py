@@ -6,33 +6,7 @@ import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field, ConfigDict
 
-FEATURE_COLUMNS: List[str] = [
-    "mois",
-    "jour",
-    "lum",
-    "agg",
-    "int",
-    "atm",
-    "col",
-    "catr",
-    "circ",
-    "nbv",
-    "vosp",
-    "prof",
-    "plan",
-    "lartpc",
-    "larrout",
-    "surf",
-    "infra",
-    "situ",
-    "env1",
-    "vma",
-    "nb_usagers",
-    "nb_pietons",
-    "pct_pietons",
-    "heure",
-    "anomaly_score",
-]
+from interface.constants import FEATURE_COLUMNS
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_PATH = BASE_DIR / "model" / "modele_gravite_rf.joblib"
@@ -142,7 +116,7 @@ def predict(payload: AccidentFeatures):
             "mock": True,
         }
 
-    if hasattr(model, "predict_proba"):
+    if model is not None and hasattr(model, "predict_proba"):
         proba = float(model.predict_proba(X)[0][1])
     else:
         proba = float(pred)
