@@ -118,10 +118,11 @@ accident_dla_route/
 ├── interface/
 │   ├── main.py                 # API FastAPI
 │   └── app.py                  # Interface Streamlit
-├── model/
-│   ├── colonnes_modele.joblib
-│   └── modele_gravite_rf.joblib
+├── tests/
+│   └── test_api.py             # Tests de l'API (pytest)
+├── .github/workflows/tests.yml # Tests à chaque push et pull request
 ├── requirements.txt
+├── requirements-dev.txt        # pytest, httpx
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
@@ -136,6 +137,10 @@ data/
 ├── usagers.csv            # À télécharger
 ├── accidents_clean.csv    # Généré par notebook
 └── accidents_scored.csv   # Généré par notebook
+
+model/
+├── colonnes_modele.joblib     # Généré par le notebook 03
+└── modele_gravite_rf.joblib   # Généré par le notebook 03
 ```
 
 ---
