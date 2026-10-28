@@ -325,3 +325,34 @@ Le modèle effectue une classification **binaire** de la gravité des accidents 
   - `1` = Accident grave (blessé hospitalisé ou tué)
 - **Probabilité :** Score de confiance pour la classe positive (grave), valeur entre 0 et 1
 - **Remarque :** Si le modèle n'est pas chargé (dossier `model/` absent), `/predict` répond `503` avec un message, plutôt qu'une fausse prédiction. `/health` indique `model_loaded`.
+
+---
+
+## État et limites
+
+Ce dépôt est un prototype. Il montre une chaîne complète : données, notebooks, API, interface, tests, Docker. Il ne prouve pas la qualité du modèle.
+
+### Résultats
+- Les trois notebooks n'ont aucune sortie enregistrée. Les 29 cellules de code sont vides de résultat.
+- Aucune métrique n'est publiée : ni exactitude, ni rappel, ni matrice de confusion. Elles ne s'obtiennent qu'en exécutant le notebook 03.
+- Les réglages du Random Forest (200 arbres, profondeur 15, `class_weight='balanced'`) sont notés « fixés après optimisation (non montrée ici) » dans le notebook 03.
+- La cible est calculée par accident : 1 si au moins un usager est tué ou blessé hospitalisé, sinon 0. Un accident sans ligne dans `usagers.csv` reçoit 0.
+
+### Modèle absent
+- Le dossier `model/` n'est pas versionné (`*.joblib` est ignoré). Sans lui, `/predict` répond `503` et `/health` indique `model_loaded: false`.
+- Pour le créer : exécuter les notebooks 02 puis 03.
+- Le notebook 02 écrit `data/accidents_scored.csv`. Le notebook 03 lit `data/df_acc_scored.csv`. Renommez l'un des deux avant de lancer le 03.
+- `docker compose build` depuis ce dépôt échoue tant que `model/` n'existe pas : le `Dockerfile` exécute `COPY model/ ./model/`.
+- Contenu de l'image Docker Hub `valdevprs/accident-app:v1.0` : À confirmer.
+
+### Tests
+- Les tests vérifient l'API : `/health`, le refus d'une entrée invalide (`422`), le `503` sans modèle, la réponse avec un faux modèle qui renvoie toujours `1` et `0.8`.
+- Ils ne vérifient pas le modèle.
+- GitHub Actions (`.github/workflows/tests.yml`) lance `python -m pytest -q` sous Python 3.12.
+
+### Fuite possible : `anomaly_score`
+- Notebook 02 : un `IsolationForest` est ajusté sur toutes les lignes (`pipeline.fit(X)`). `anomaly_score` en sort, pour chaque ligne.
+- Notebook 03 : `train_test_split` (20 % de test) vient après. Les lignes de test ont donc servi à ajuster le détecteur dont le score devient une variable d'entrée.
+- L'`IsolationForest` ne voit pas la cible, créée dans le notebook 03. La fuite est donc indirecte. Son effet n'est pas mesuré.
+- Même défaut pour les valeurs manquantes : `X.fillna(X.median())` prend la médiane de toutes les lignes, avant la séparation.
+- À corriger : séparer d'abord, ajuster le détecteur et les médianes sur l'entraînement seul, puis les appliquer au test.
