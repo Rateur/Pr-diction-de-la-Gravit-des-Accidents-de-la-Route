@@ -3,7 +3,7 @@ from typing import List
 
 import joblib
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
 
 from interface.constants import FEATURE_COLUMNS
@@ -66,23 +66,6 @@ def to_dataframe(payload: AccidentFeatures, cols: List[str]) -> pd.DataFrame:
     return pd.DataFrame([row], columns=cols)
 
 
-def mock_predict(row: dict) -> tuple[int, float]:
-    vma = float(row.get("vma") or 0)
-    nb_usagers = float(row.get("nb_usagers") or 0)
-    nb_pietons = float(row.get("nb_pietons") or 0)
-    anomaly = float(row.get("anomaly_score") or 0)
-
-    score = 0.0
-    score += min(vma / 130.0, 1.0) * 0.30
-    score += min(nb_usagers / 10.0, 1.0) * 0.20
-    score += min(nb_pietons / 5.0, 1.0) * 0.20
-    score += min(abs(anomaly) / 5.0, 1.0) * 0.30
-
-    proba = max(0.0, min(1.0, score))
-    pred = int(proba >= 0.5)
-    return pred, proba
-
-
 @app.get("/health")
 def health():
     return {
@@ -96,25 +79,14 @@ def health():
 def predict(payload: AccidentFeatures):
     X = to_dataframe(payload, columns)
 
+    # Sans modèle, pas de réponse inventée : le client doit savoir que la prédiction n'existe pas.
     if not model_loaded:
-        pred, proba = mock_predict(X.iloc[0].to_dict())
-        return {
-            "prediction": pred,
-            "probability": proba,
-            "model_loaded": False,
-            "mock": True,
-        }
+        raise HTTPException(status_code=503, detail="Modèle non chargé : exécutez notebooks/03_Modelisation_Evaluation.ipynb pour créer model/.")
 
     try:
         pred = int(model.predict(X)[0])
-    except Exception:
-        pred, proba = mock_predict(X.iloc[0].to_dict())
-        return {
-            "prediction": pred,
-            "probability": proba,
-            "model_loaded": True,
-            "mock": True,
-        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="La prédiction a échoué.") from exc
 
     if model is not None and hasattr(model, "predict_proba"):
         proba = float(model.predict_proba(X)[0][1])
@@ -125,5 +97,4 @@ def predict(payload: AccidentFeatures):
         "prediction": pred,
         "probability": proba,
         "model_loaded": True,
-        "mock": False,
     }

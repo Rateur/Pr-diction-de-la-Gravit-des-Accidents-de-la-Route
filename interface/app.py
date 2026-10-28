@@ -188,7 +188,7 @@ if submit:
                 st.subheader("Resume technique")
                 st.write(f"Prediction binaire: {pred} (1 = grave, 0 = non grave)")
                 st.write(f"Probabilite brute: {proba:.4f}")
-                model_state = "charge" if data.get("model_loaded") else "mock"
+                model_state = "charge"   # une réponse 200 vient toujours du vrai modèle
                 st.markdown(
                     f"<span class='badge badge-info'>Modele {model_state}</span>",
                     unsafe_allow_html=True,
