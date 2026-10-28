@@ -268,6 +268,13 @@ python -m uvicorn interface.main:app --reload --port 8000
 streamlit run interface/app.py
 ```
 
+**Tests :**
+```bash
+pip install -r requirements-dev.txt
+python -m pytest -q
+```
+Les tests n'ont besoin ni des données ni du modèle : ils vérifient `/health`, le refus d'une entrée invalide, la réponse `503` sans modèle et la réponse d'un modèle factice.
+
 </details>
 
 ---
