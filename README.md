@@ -312,4 +312,4 @@ Le modèle effectue une classification **binaire** de la gravité des accidents 
   - `0` = Accident non grave (indemne ou blessé léger)
   - `1` = Accident grave (blessé hospitalisé ou tué)
 - **Probabilité :** Score de confiance pour la classe positive (grave), valeur entre 0 et 1
-- **Remarque :** Si le modèle n'est pas chargé, l'API renvoie un résultat de secours avec `mock: true`
+- **Remarque :** Si le modèle n'est pas chargé (dossier `model/` absent), `/predict` répond `503` avec un message, plutôt qu'une fausse prédiction. `/health` indique `model_loaded`.
